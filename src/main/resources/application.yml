@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: Gerenciamento-Tarefas
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: perenity
+    password: perenity
