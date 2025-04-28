@@ -1,6 +1,7 @@
 package org.perenity.gerenciamentotarefas.presentation.pessoa.controller;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.perenity.gerenciamentotarefas.business.pessoa.service.impl.PessoaService;
@@ -20,15 +21,16 @@ public class PessoaController {
 
     private final PessoaService pessoaService;
     private final PessoaDtoMapper pessoaDtoMapper;
-    @PostMapping()
+
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> cadastrarPessoa(@RequestBody final RequestPessoa requestPessoa) {
-        Optional.of(requestPessoa)
+    public ResponseEntity<String> cadastrarPessoa(@RequestBody @Valid final RequestPessoa requestPessoa) {
+        return Optional.of(requestPessoa)
                 .map(pessoaDtoMapper::toModel)
-                .map(pessoaService::cadastrarPessoa);
-
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("Pessoa criada com sucesso!");
+                .map(pessoaService::cadastrarPessoa)
+                .map(pessoa -> ResponseEntity.status(HttpStatus.CREATED)
+                        .body("Pessoa criada com sucesso! ID: " + pessoa.getId()))
+                .orElseThrow();
     }
 
 }
