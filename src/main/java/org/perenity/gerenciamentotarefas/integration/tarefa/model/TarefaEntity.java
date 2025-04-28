@@ -1,4 +1,4 @@
-package org.perenity.gerenciamentotarefas.integration.model;
+package org.perenity.gerenciamentotarefas.integration.tarefa.model;
 
 import jakarta.persistence.*;
 import lombok.*;
