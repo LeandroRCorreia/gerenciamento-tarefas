@@ -34,6 +34,14 @@ public class TarefaGatewayImpl implements TarefaGateway {
     }
 
     @Override
+    public Collection<Tarefa> listarTarefasPorPessoa(final Long pessoaId) {
+        return tarefaRepository.findByPessoaId(pessoaId)
+                .stream()
+                .map(tarefaEntityMapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public Collection<Tarefa> listarTarefasPendentes() {
         return tarefaRepository.findTop3ByPessoaIdIsNullOrderByPrazoAsc()
                 .stream()

@@ -28,6 +28,14 @@ public class PessoaGatewayImpl implements PessoaGateway {
     }
 
     @Override
+    public Collection<Pessoa> listarTodas() {
+        return pessoaRepository.findAll()
+                .stream()
+                .map(pessoaEntityMapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public Collection<Pessoa> listarPessoasPorNomePeriodo(
             final String nome,
             final LocalDateTime dataInicio,

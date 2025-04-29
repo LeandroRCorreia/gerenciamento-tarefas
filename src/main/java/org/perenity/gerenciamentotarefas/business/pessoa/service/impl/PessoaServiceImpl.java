@@ -10,10 +10,12 @@ import org.perenity.gerenciamentotarefas.business.tarefa.gateway.TarefaGateway;
 import org.perenity.gerenciamentotarefas.business.tarefa.model.Tarefa;
 import org.perenity.gerenciamentotarefas.exception.NotFoundException;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.response.ResponseListarPessoasNomePeriodo;
+import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.response.ResponseListarPessoasTotalHoraTarefa;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,6 +44,27 @@ public class PessoaServiceImpl implements PessoaService {
                     .nome(pessoa.getNome())
                     .departamento(pessoa.getDepartamento())
                     .mediaHorasGastaPorTarefa(mediaHoras)
+                    .build();
+        }).toList();
+    }
+
+    @Override
+    public Collection<ResponseListarPessoasTotalHoraTarefa> listarPessoasComTotalHorasGastas() {
+        final Collection<Pessoa> pessoas = pessoaGateway.listarTodas();
+
+        return pessoas.stream().map(pessoa -> {
+            final Collection<Tarefa> tarefas = tarefaGateway.listarTarefasPorPessoa(pessoa.getId());
+
+            final Long totalHoras = tarefas.stream()
+                    .filter(t -> Boolean.TRUE.equals(t.getFinalizado()) && t.getDuracaoHoras() != null)
+                    .mapToLong(Tarefa::getDuracaoHoras)
+                    .sum();
+
+            return ResponseListarPessoasTotalHoraTarefa.builder()
+                    .pessoaId(pessoa.getId())
+                    .nome(pessoa.getNome())
+                    .departamento(pessoa.getDepartamento())
+                    .totalHorasGastas(totalHoras)
                     .build();
         }).toList();
     }

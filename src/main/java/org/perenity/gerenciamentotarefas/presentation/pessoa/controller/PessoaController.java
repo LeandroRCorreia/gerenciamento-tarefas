@@ -7,6 +7,7 @@ import org.perenity.gerenciamentotarefas.business.pessoa.service.PessoaService;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.request.RequestAtualizarPessoa;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.request.RequestCadastrarPessoa;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.response.ResponseListarPessoasNomePeriodo;
+import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.response.ResponseListarPessoasTotalHoraTarefa;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.mapper.PessoaDtoMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,11 +32,17 @@ public class PessoaController {
             @RequestParam String nome,
             @RequestParam String dataInicio,
             @RequestParam String dataFim) {
+        //TODO: Fazer uma validação de horas mais robustas
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime inicio = LocalDateTime.parse(dataInicio + "T00:00:00", formatter);
         LocalDateTime fim = LocalDateTime.parse(dataFim + "T23:59:59", formatter);
 
         return ResponseEntity.ok(pessoaService.listarPessoasPorNomePeriodo(nome, inicio, fim));
+    }
+
+    @GetMapping()
+    public ResponseEntity<Collection<ResponseListarPessoasTotalHoraTarefa>> listarPessoas() {
+        return ResponseEntity.ok(pessoaService.listarPessoasComTotalHorasGastas());
     }
 
     @PostMapping

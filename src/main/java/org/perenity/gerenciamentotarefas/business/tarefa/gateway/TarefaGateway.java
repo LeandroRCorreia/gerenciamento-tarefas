@@ -11,6 +11,7 @@ public interface TarefaGateway {
             final Long pessoaId,
             final LocalDateTime inicio,
             final LocalDateTime fim);
+    Collection<Tarefa> listarTarefasPorPessoa(final Long pessoaId);
     Collection<Tarefa> listarTarefasPendentes();
     Optional<Tarefa> buscarTarefa(final Long id);
     Tarefa cadastrar(final Tarefa tarefa);
