@@ -7,5 +7,6 @@ import java.util.Optional;
 public interface TarefaGateway {
     Optional<Tarefa> buscarTarefa(final Long id);
     Tarefa cadastrar(final Tarefa tarefa);
+    void atualizar(final Long id, final Tarefa tarefa);
 
 }

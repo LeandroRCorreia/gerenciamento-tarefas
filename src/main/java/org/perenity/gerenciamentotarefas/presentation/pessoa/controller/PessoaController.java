@@ -41,7 +41,7 @@ public class PessoaController {
                 .map(pessoaDtoMapper::toModel)
                 .map(pessoaAtualizada -> {
                     pessoaService.atualizarPessoa(id, pessoaAtualizada);
-                    return ResponseEntity.status(204).build();
+                    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
                 })
                 .orElseThrow();
     }

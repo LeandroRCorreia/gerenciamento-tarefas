@@ -37,4 +37,12 @@ public class TarefaGatewayImpl implements TarefaGateway {
                 .orElseThrow(() -> new RuntimeException("Tarefa inválida para cadastro"));
     }
 
+    @Override
+    public void atualizar(final Long id, final Tarefa tarefa) {
+        Optional.ofNullable(tarefa)
+                .map(tarefaEntityMapper::toEntity)
+                .map(tarefaRepository::save)
+                .orElseThrow(() -> new RuntimeException("Tarefa inválida para atualização"));
+    }
+
 }

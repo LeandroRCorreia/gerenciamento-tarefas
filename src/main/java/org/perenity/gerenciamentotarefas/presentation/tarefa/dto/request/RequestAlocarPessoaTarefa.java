@@ -1,28 +1,21 @@
-package org.perenity.gerenciamentotarefas.business.tarefa.model;
+package org.perenity.gerenciamentotarefas.presentation.tarefa.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Tarefa {
-    private Long id;
-    private String titulo;
-    private String descricao;
-    private LocalDateTime prazo;
-    private String departamento;
-    private Boolean finalizado;
-    private Long duracaoHoras;
+public class RequestAlocarPessoaTarefa {
+    @NotNull
     private Long pessoaId;
-
 }
