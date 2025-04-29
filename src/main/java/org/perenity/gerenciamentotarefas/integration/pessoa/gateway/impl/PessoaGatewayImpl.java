@@ -8,6 +8,9 @@ import org.perenity.gerenciamentotarefas.integration.pessoa.mapper.PessoaEntityM
 import org.perenity.gerenciamentotarefas.integration.pessoa.repository.PessoaRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +25,18 @@ public class PessoaGatewayImpl implements PessoaGateway {
         return Optional.ofNullable(id)
                 .flatMap(pessoaRepository::findById)
                 .map(pessoaEntityMapper::toDomain);
+    }
+
+    @Override
+    public Collection<Pessoa> listarPessoasPorNomePeriodo(
+            final String nome,
+            final LocalDateTime dataInicio,
+            final LocalDateTime dataFim) {
+        return pessoaRepository
+                .listarPessoasPorNomeETarefasNoPeriodo(nome, dataInicio, dataFim)
+                .stream()
+                .map(pessoaEntityMapper::toDomain)
+                .toList();
     }
 
     @Override

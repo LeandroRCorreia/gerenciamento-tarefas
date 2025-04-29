@@ -6,9 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.perenity.gerenciamentotarefas.business.pessoa.gateway.PessoaGateway;
 import org.perenity.gerenciamentotarefas.business.pessoa.model.Pessoa;
 import org.perenity.gerenciamentotarefas.business.pessoa.service.PessoaService;
+import org.perenity.gerenciamentotarefas.business.tarefa.gateway.TarefaGateway;
+import org.perenity.gerenciamentotarefas.business.tarefa.model.Tarefa;
 import org.perenity.gerenciamentotarefas.exception.NotFoundException;
+import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.response.ResponseListarPessoasNomePeriodo;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -17,6 +22,29 @@ import java.util.Optional;
 public class PessoaServiceImpl implements PessoaService {
 
     private final PessoaGateway pessoaGateway;
+    private final TarefaGateway tarefaGateway;
+
+    @Override
+    public Collection<ResponseListarPessoasNomePeriodo> listarPessoasPorNomePeriodo(
+            final String nome,
+            final LocalDateTime inicio,
+            final LocalDateTime fim) {
+        final Collection<Pessoa> pessoas = pessoaGateway.listarPessoasPorNomePeriodo(nome, inicio, fim);
+
+        return pessoas.stream().map(pessoa -> {
+            final Collection<Tarefa> tarefas = tarefaGateway
+                    .listarTarefasPorPessoaEPeriodo(pessoa.getId(), inicio, fim);
+
+            final Double mediaHoras = pessoa.calcularMediaHorasGastas(tarefas);
+
+            return ResponseListarPessoasNomePeriodo.builder()
+                    .pessoaId(pessoa.getId())
+                    .nome(pessoa.getNome())
+                    .departamento(pessoa.getDepartamento())
+                    .mediaHorasGastaPorTarefa(mediaHoras)
+                    .build();
+        }).toList();
+    }
 
     @Override
     public Pessoa cadastrarPessoa(final Pessoa pessoa) {

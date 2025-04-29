@@ -6,11 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.perenity.gerenciamentotarefas.business.pessoa.service.PessoaService;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.request.RequestAtualizarPessoa;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.request.RequestCadastrarPessoa;
+import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.response.ResponseListarPessoasNomePeriodo;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.mapper.PessoaDtoMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Optional;
 
 @RestController
@@ -21,6 +25,18 @@ public class PessoaController {
 
     private final PessoaService pessoaService;
     private final PessoaDtoMapper pessoaDtoMapper;
+
+    @GetMapping("/gastos")
+    public ResponseEntity<Collection<ResponseListarPessoasNomePeriodo>> listarPessoasPorNomePeriodo(
+            @RequestParam String nome,
+            @RequestParam String dataInicio,
+            @RequestParam String dataFim) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        LocalDateTime inicio = LocalDateTime.parse(dataInicio + "T00:00:00", formatter);
+        LocalDateTime fim = LocalDateTime.parse(dataFim + "T23:59:59", formatter);
+
+        return ResponseEntity.ok(pessoaService.listarPessoasPorNomePeriodo(nome, inicio, fim));
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
