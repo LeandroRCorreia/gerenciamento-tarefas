@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.perenity.gerenciamentotarefas.business.pessoa.gateway.PessoaGateway;
 import org.perenity.gerenciamentotarefas.business.pessoa.model.Pessoa;
+import org.perenity.gerenciamentotarefas.business.pessoa.service.PessoaService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

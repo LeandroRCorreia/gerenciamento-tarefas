@@ -1,0 +1,23 @@
+package org.perenity.gerenciamentotarefas.presentation.tarefa.mapper;
+
+
+import org.perenity.gerenciamentotarefas.business.tarefa.model.Tarefa;
+import org.perenity.gerenciamentotarefas.presentation.tarefa.dto.request.RequestCadastrarTarefa;
+import org.springframework.stereotype.Component;
+
+
+@Component
+public class TarefaDtoMapper {
+
+
+    public Tarefa toModel(final RequestCadastrarTarefa requestCadastrarTarefa) {
+        return Tarefa.builder()
+                .titulo(requestCadastrarTarefa.getTitulo())
+                .descricao(requestCadastrarTarefa.getDescricao())
+                .prazo(requestCadastrarTarefa.getPrazo())
+                .departamento(requestCadastrarTarefa.getDepartamento())
+                .finalizado(Boolean.FALSE)
+                .build();
+    }
+
+}

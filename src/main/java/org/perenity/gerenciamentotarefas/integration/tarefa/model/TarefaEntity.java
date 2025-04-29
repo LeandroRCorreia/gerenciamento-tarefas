@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 public class TarefaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String titulo;
     private String descricao;
     private LocalDateTime prazo;
     private String departamento;
-    private Integer duracaoHoras;
+    private Long duracaoHoras;
     private Boolean finalizado;
 
-    private Integer pessoaId;
+    private Long pessoaId;
 }

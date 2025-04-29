@@ -1,0 +1,9 @@
+package org.perenity.gerenciamentotarefas.business.tarefa.service;
+
+import org.perenity.gerenciamentotarefas.business.tarefa.model.Tarefa;
+
+public interface TarefaService {
+
+    Tarefa cadastrarTarefa(final Tarefa tarefa);
+
+}

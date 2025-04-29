@@ -1,4 +1,4 @@
-package org.perenity.gerenciamentotarefas.business.pessoa.service.impl;
+package org.perenity.gerenciamentotarefas.business.pessoa.service;
 
 import org.perenity.gerenciamentotarefas.business.pessoa.model.Pessoa;
 

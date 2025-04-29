@@ -18,7 +18,7 @@ public class PessoaGatewayImpl implements PessoaGateway {
     private final PessoaRepository pessoaRepository;
 
     @Override
-    public Optional<Pessoa> buscarPessoa(Long id) {
+    public Optional<Pessoa> buscarPessoa(final Long id) {
         return Optional.ofNullable(id)
                 .flatMap(pessoaRepository::findById)
                 .map(pessoaEntityMapper::toDomain);

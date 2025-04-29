@@ -3,12 +3,11 @@ package org.perenity.gerenciamentotarefas.presentation.pessoa.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.perenity.gerenciamentotarefas.business.pessoa.service.impl.PessoaService;
+import org.perenity.gerenciamentotarefas.business.pessoa.service.PessoaService;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.request.RequestAtualizarPessoa;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.request.RequestCadastrarPessoa;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.mapper.PessoaDtoMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
