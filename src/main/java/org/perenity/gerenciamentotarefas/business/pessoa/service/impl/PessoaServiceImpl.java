@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.perenity.gerenciamentotarefas.business.pessoa.gateway.PessoaGateway;
 import org.perenity.gerenciamentotarefas.business.pessoa.model.Pessoa;
 import org.perenity.gerenciamentotarefas.business.pessoa.service.PessoaService;
+import org.perenity.gerenciamentotarefas.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -32,10 +33,11 @@ public class PessoaServiceImpl implements PessoaService {
     public void atualizarPessoa(final Long id, final Pessoa pessoa) {
         Optional.ofNullable(pessoa)
                 .ifPresent(p -> {
-                    Optional<Pessoa> optionalPessoa = pessoaGateway.buscarPessoa(id);
-                    // TODO: fazer com que essa exception dispare 404 e seja tratada corretamente
-                    if (optionalPessoa.isEmpty()) throw new RuntimeException("Pessoa não encontrada");
-                    pessoaGateway.atualizar(id, pessoa);
+                    final Pessoa pessoaEncontrada = pessoaGateway
+                            .buscarPessoa(id)
+                            .orElseThrow(() -> new NotFoundException("Pessoa não encontrada"));
+                    final Pessoa buildPessoaAtualizada = buildPessoaAtualizada(pessoa, pessoaEncontrada);
+                    pessoaGateway.atualizar(id, buildPessoaAtualizada);
                     log.info("[Pessoa-Api][atualizarPessoa] Pessoa atualizada com sucesso! ID: {}", id);
                 });
     }
@@ -45,6 +47,13 @@ public class PessoaServiceImpl implements PessoaService {
         Optional.ofNullable(id)
                 .ifPresent(pessoaGateway::deletar);
         log.info("[Pessoa-Api][excluirPessoa] Pessoa excluida com sucesso! ID: {}", id);
+    }
+
+    private Pessoa buildPessoaAtualizada(final Pessoa novaPessoa, final Pessoa pessoaEncontrada) {
+        return pessoaEncontrada.toBuilder()
+                .nome(novaPessoa.getNome() != null ? novaPessoa.getNome() : pessoaEncontrada.getNome())
+                .departamento(novaPessoa.getDepartamento() != null ? novaPessoa.getDepartamento() : pessoaEncontrada.getDepartamento())
+                .build();
     }
 
 }
