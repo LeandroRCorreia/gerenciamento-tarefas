@@ -7,12 +7,14 @@ import org.perenity.gerenciamentotarefas.business.tarefa.service.TarefaService;
 import org.perenity.gerenciamentotarefas.presentation.tarefa.dto.request.RequestAlocarPessoaTarefa;
 import org.perenity.gerenciamentotarefas.presentation.tarefa.dto.request.RequestCadastrarTarefa;
 import org.perenity.gerenciamentotarefas.presentation.tarefa.dto.request.RequestFinalizarTarefa;
+import org.perenity.gerenciamentotarefas.presentation.tarefa.dto.response.ResponseListarTarefasPendentes;
 import org.perenity.gerenciamentotarefas.presentation.tarefa.mapper.TarefaDtoMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @RestController
@@ -22,6 +24,15 @@ public class TarefaController {
 
     private final TarefaDtoMapper tarefaDtoMapper;
     private final TarefaService tarefaService;
+
+    @GetMapping("/pendentes")
+    public ResponseEntity<Collection<ResponseListarTarefasPendentes>> listarTarefasPendentes(){
+        return ResponseEntity.ok()
+                .body(tarefaService.listarTarefasPendentes()
+                .stream()
+                .map(tarefaDtoMapper::toResponse)
+                .toList());
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -39,7 +50,7 @@ public class TarefaController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> alocarPessoaTarefa(
             @PathVariable final Long id,
-            @RequestBody @Valid RequestAlocarPessoaTarefa requestAlocarPessoaTarefa){
+            @RequestBody @Valid final RequestAlocarPessoaTarefa requestAlocarPessoaTarefa){
         return Optional.ofNullable(requestAlocarPessoaTarefa)
                 .map(tarefaDtoMapper::toModel)
                 .map(tarefa -> {
@@ -53,7 +64,7 @@ public class TarefaController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> finalizarTarefa(
             @PathVariable final Long id,
-            @RequestBody @Valid RequestFinalizarTarefa requestFinalizarTarefa){
+            @RequestBody @Valid final RequestFinalizarTarefa requestFinalizarTarefa){
         return Optional.ofNullable(requestFinalizarTarefa)
                 .map(tarefaDtoMapper::toModel)
                 .map(tarefa -> {

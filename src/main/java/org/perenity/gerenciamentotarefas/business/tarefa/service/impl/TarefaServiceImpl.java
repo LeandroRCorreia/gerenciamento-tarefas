@@ -10,6 +10,8 @@ import org.perenity.gerenciamentotarefas.business.tarefa.service.TarefaService;
 import org.perenity.gerenciamentotarefas.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -17,6 +19,11 @@ public class TarefaServiceImpl implements TarefaService {
 
     private final TarefaGateway tarefaGateway;
     private final PessoaGateway pessoaGateway;
+
+    @Override
+    public Collection<Tarefa> listarTarefasPendentes() {
+        return tarefaGateway.listarTarefasPendentes();
+    }
 
     @Override
     public Tarefa cadastrarTarefa(final Tarefa tarefa) {

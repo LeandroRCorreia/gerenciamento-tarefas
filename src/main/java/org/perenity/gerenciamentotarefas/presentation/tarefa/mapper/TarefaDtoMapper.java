@@ -1,10 +1,12 @@
 package org.perenity.gerenciamentotarefas.presentation.tarefa.mapper;
 
 
+import org.apache.coyote.Response;
 import org.perenity.gerenciamentotarefas.business.tarefa.model.Tarefa;
 import org.perenity.gerenciamentotarefas.presentation.tarefa.dto.request.RequestAlocarPessoaTarefa;
 import org.perenity.gerenciamentotarefas.presentation.tarefa.dto.request.RequestCadastrarTarefa;
 import org.perenity.gerenciamentotarefas.presentation.tarefa.dto.request.RequestFinalizarTarefa;
+import org.perenity.gerenciamentotarefas.presentation.tarefa.dto.response.ResponseListarTarefasPendentes;
 import org.springframework.stereotype.Component;
 
 
@@ -34,5 +36,17 @@ public class TarefaDtoMapper {
                 .duracaoHoras(requestFinalizarTarefa.getDuracaoHoras())
                 .build();
     }
+
+    public ResponseListarTarefasPendentes toResponse(final Tarefa tarefa) {
+        return ResponseListarTarefasPendentes.builder()
+                .id(tarefa.getId())
+                .titulo(tarefa.getTitulo())
+                .descricao(tarefa.getDescricao())
+                .prazo(tarefa.getPrazo())
+                .departamento(tarefa.getDepartamento())
+                .finalizado(tarefa.getFinalizado())
+                .build();
+    }
+
 
 }

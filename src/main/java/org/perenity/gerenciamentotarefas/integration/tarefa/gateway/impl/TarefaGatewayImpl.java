@@ -12,6 +12,8 @@ import org.perenity.gerenciamentotarefas.integration.tarefa.repository.TarefaRep
 import org.perenity.gerenciamentotarefas.presentation.tarefa.mapper.TarefaDtoMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +23,14 @@ public class TarefaGatewayImpl implements TarefaGateway {
 
     private final TarefaRepository tarefaRepository;
     private final TarefaEntityMapper tarefaEntityMapper;
+
+    @Override
+    public Collection<Tarefa> listarTarefasPendentes() {
+        return tarefaRepository.findTop3ByPessoaIdIsNullOrderByPrazoAsc()
+                .stream()
+                .map(tarefaEntityMapper::toDomain)
+                .toList();
+    }
 
     public Optional<Tarefa> buscarTarefa(final Long id){
         return Optional.ofNullable(id)
