@@ -19,11 +19,31 @@ public class PessoaServiceImpl implements PessoaService {
     @Override
     public Pessoa cadastrarPessoa(final Pessoa pessoa) {
         return Optional.ofNullable(pessoa)
-                .map(pessoaGateway::cadastrarPessoa)
+                .map(pessoaGateway::cadastrar)
                 .map(pessoaCadastrada -> {
                     log.info("[Pessoa-Api][cadastrarPessoa] Pessoa cadastrada com sucesso! ID: {}", pessoaCadastrada.getId());
                     return pessoaCadastrada;
                 })
-                .orElseThrow(() -> new RuntimeException("Pessoa não pode ser nula"));
+                .orElseThrow();
     }
+
+    @Override
+    public void atualizarPessoa(final Long id, final Pessoa pessoa) {
+        Optional.ofNullable(pessoa)
+                .ifPresent(p -> {
+                    Optional<Pessoa> optionalPessoa = pessoaGateway.buscarPessoa(id);
+                    // TODO: fazer com que essa exception dispare 404 e seja tratada corretamente
+                    if (optionalPessoa.isEmpty()) throw new RuntimeException("Pessoa não encontrada");
+                    pessoaGateway.atualizar(id, pessoa);
+                    log.info("[Pessoa-Api][atualizarPessoa] Pessoa atualizada com sucesso! ID: {}", id);
+                });
+    }
+
+    @Override
+    public void excluirPessoa(final Long id) {
+        Optional.ofNullable(id)
+                .ifPresent(pessoaGateway::deletar);
+        log.info("[Pessoa-Api][excluirPessoa] Pessoa excluida com sucesso! ID: {}", id);
+    }
+
 }

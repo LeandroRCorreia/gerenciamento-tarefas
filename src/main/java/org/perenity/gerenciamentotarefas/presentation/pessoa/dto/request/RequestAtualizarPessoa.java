@@ -1,9 +1,11 @@
-package org.perenity.gerenciamentotarefas.business.pessoa.model;
-
+package org.perenity.gerenciamentotarefas.presentation.pessoa.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
@@ -11,10 +13,7 @@ import lombok.*;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Pessoa {
-    @With
-    private Long id;
+public class RequestAtualizarPessoa {
     private String nome;
     private String departamento;
-
 }

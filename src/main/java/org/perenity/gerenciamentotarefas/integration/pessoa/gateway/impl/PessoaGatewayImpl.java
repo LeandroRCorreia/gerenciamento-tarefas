@@ -18,7 +18,14 @@ public class PessoaGatewayImpl implements PessoaGateway {
     private final PessoaRepository pessoaRepository;
 
     @Override
-    public Pessoa cadastrarPessoa(final Pessoa pessoa) {
+    public Optional<Pessoa> buscarPessoa(Long id) {
+        return Optional.ofNullable(id)
+                .flatMap(pessoaRepository::findById)
+                .map(pessoaEntityMapper::toDomain);
+    }
+
+    @Override
+    public Pessoa cadastrar(final Pessoa pessoa) {
         return Optional.ofNullable(pessoa)
                 .map(pessoaEntityMapper::toEntity)
                 .map(pessoaRepository::save)
@@ -26,7 +33,20 @@ public class PessoaGatewayImpl implements PessoaGateway {
                 .orElseThrow(() -> new RuntimeException("Pessoa inválida para cadastro"));
     }
 
+    @Override
+    public void atualizar(final Long id, final Pessoa pessoa) {
+        Optional.ofNullable(id)
+                .map(pessoa::withId)
+                .map(pessoaEntityMapper::toEntity)
+                .map(pessoaRepository::save)
+                .map(pessoaEntityMapper::toDomain)
+                .orElseThrow(() -> new RuntimeException("Pessoa inválida para atualização"));
+    }
 
-
+    @Override
+    public void deletar(final Long id) {
+        Optional.ofNullable(id)
+                .ifPresent(pessoaRepository::deleteById);
+    }
 
 }

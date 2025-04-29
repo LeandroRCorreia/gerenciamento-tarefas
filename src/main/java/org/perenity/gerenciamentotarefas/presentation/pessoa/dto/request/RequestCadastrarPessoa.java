@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RequestPessoa {
+public class RequestCadastrarPessoa {
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
     @NotBlank(message = "O departamento é obrigatório")
