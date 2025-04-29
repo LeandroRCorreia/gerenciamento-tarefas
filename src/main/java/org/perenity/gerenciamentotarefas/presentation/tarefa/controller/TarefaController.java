@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.perenity.gerenciamentotarefas.business.tarefa.service.TarefaService;
 import org.perenity.gerenciamentotarefas.presentation.tarefa.dto.request.RequestAlocarPessoaTarefa;
 import org.perenity.gerenciamentotarefas.presentation.tarefa.dto.request.RequestCadastrarTarefa;
+import org.perenity.gerenciamentotarefas.presentation.tarefa.dto.request.RequestFinalizarTarefa;
 import org.perenity.gerenciamentotarefas.presentation.tarefa.mapper.TarefaDtoMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -43,6 +44,20 @@ public class TarefaController {
                 .map(tarefaDtoMapper::toModel)
                 .map(tarefa -> {
                     tarefaService.alocarTarefaPessoa(id, tarefa);
+                    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+                })
+                .orElseThrow();
+    }
+
+    @PutMapping("/finalizar/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> finalizarTarefa(
+            @PathVariable final Long id,
+            @RequestBody @Valid RequestFinalizarTarefa requestFinalizarTarefa){
+        return Optional.ofNullable(requestFinalizarTarefa)
+                .map(tarefaDtoMapper::toModel)
+                .map(tarefa -> {
+                    tarefaService.finalizarTarefa(id, tarefa);
                     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
                 })
                 .orElseThrow();

@@ -1,5 +1,6 @@
 package org.perenity.gerenciamentotarefas.presentation.tarefa.dto.request;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +15,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RequestAlocarPessoaTarefa {
+public class RequestFinalizarTarefa {
     @NotNull
     private Long pessoaId;
+    @NotNull
+    private Long duracaoHoras;
+
 }

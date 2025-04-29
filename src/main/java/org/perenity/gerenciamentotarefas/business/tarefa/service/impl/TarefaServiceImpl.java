@@ -10,8 +10,6 @@ import org.perenity.gerenciamentotarefas.business.tarefa.service.TarefaService;
 import org.perenity.gerenciamentotarefas.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -46,5 +44,23 @@ public class TarefaServiceImpl implements TarefaService {
                 .build();
 
         tarefaGateway.atualizar(id, tarefaComPessoaAlocada);
+    }
+
+    @Override
+    public void finalizarTarefa(final Long id, final Tarefa tarefa) {
+        final Tarefa tarefaEncontrada = tarefaGateway
+                .buscarTarefa(id)
+                .orElseThrow(() -> new NotFoundException("Tarefa não encontrada com ID: " + id));
+
+        final Pessoa pessoaEncontrada = pessoaGateway
+                .buscarPessoa(tarefa.getPessoaId())
+                .orElseThrow(() -> new NotFoundException("Pessoa não encontrada ou não alocada em tarefa com ID: " + tarefa.getPessoaId()));
+
+        final Tarefa tarefaFinalizada = tarefaEncontrada.toBuilder()
+                .finalizado(Boolean.TRUE)
+                .duracaoHoras(tarefa.getDuracaoHoras())
+                .build();
+
+        tarefaGateway.atualizar(id, tarefaFinalizada);
     }
 }
