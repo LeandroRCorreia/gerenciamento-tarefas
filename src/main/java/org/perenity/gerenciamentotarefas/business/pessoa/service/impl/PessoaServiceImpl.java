@@ -1,6 +1,5 @@
 package org.perenity.gerenciamentotarefas.business.pessoa.service.impl;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.perenity.gerenciamentotarefas.business.pessoa.gateway.PessoaGateway;
@@ -30,9 +29,15 @@ public class PessoaServiceImpl implements PessoaService {
             final String nome,
             final LocalDateTime inicio,
             final LocalDateTime fim) {
+        log.info("[Pessoa-Api][listarPessoasPorNomePeriodo] Iniciando consulta de pessoas com nome '{}' no período de {} até {}", nome, inicio, fim);
+
         final Collection<Pessoa> pessoas = pessoaGateway.listarPessoasPorNomePeriodo(nome, inicio, fim);
 
+        log.info("[Pessoa-Api][listarPessoasPorNomePeriodo] Encontradas {} pessoas", pessoas.size());
+
         return pessoas.stream().map(pessoa -> {
+            log.debug("[Pessoa-Api][listarPessoasPorNomePeriodo] Processando pessoa: {}", pessoa.getNome());
+
             final Collection<Tarefa> tarefas = tarefaGateway
                     .listarTarefasPorPessoaEPeriodo(pessoa.getId(), inicio, fim);
 
@@ -49,9 +54,15 @@ public class PessoaServiceImpl implements PessoaService {
 
     @Override
     public Collection<ResponseListarPessoasTotalHoraTarefa> listarPessoasComTotalHorasGastas() {
+        log.info("[Pessoa-Api][listarPessoasComTotalHorasGastas] Iniciando consulta para listar pessoas com total de horas gastas.");
+
         final Collection<Pessoa> pessoas = pessoaGateway.listarTodas();
 
+        log.info("[Pessoa-Api][listarPessoasComTotalHorasGastas] Encontradas {} pessoas", pessoas.size());
+
         return pessoas.stream().map(pessoa -> {
+            log.debug("[Pessoa-Api][listarPessoasComTotalHorasGastas] Processando pessoa: {}", pessoa.getNome());
+
             final Collection<Tarefa> tarefas = tarefaGateway.listarTarefasPorPessoa(pessoa.getId());
 
             final Long totalHoras = tarefas.stream()
@@ -70,17 +81,24 @@ public class PessoaServiceImpl implements PessoaService {
 
     @Override
     public Pessoa cadastrarPessoa(final Pessoa pessoa) {
+        log.info("[Pessoa-Api][cadastrarPessoa] Iniciando o cadastro de uma nova pessoa.");
+
         return Optional.ofNullable(pessoa)
                 .map(pessoaGateway::cadastrar)
                 .map(pessoaCadastrada -> {
                     log.info("[Pessoa-Api][cadastrarPessoa] Pessoa cadastrada com sucesso! ID: {}", pessoaCadastrada.getId());
                     return pessoaCadastrada;
                 })
-                .orElseThrow();
+                .orElseThrow(() -> {
+                    log.error("[Pessoa-Api][cadastrarPessoa] Falha ao cadastrar a pessoa.");
+                    return new IllegalArgumentException("Pessoa inválida");
+                });
     }
 
     @Override
     public void atualizarPessoa(final Long id, final Pessoa pessoa) {
+        log.info("[Pessoa-Api][atualizarPessoa] Iniciando a atualização da pessoa com ID: {}", id);
+
         Optional.ofNullable(pessoa)
                 .ifPresent(p -> {
                     final Pessoa pessoaEncontrada = pessoaGateway
@@ -94,9 +112,11 @@ public class PessoaServiceImpl implements PessoaService {
 
     @Override
     public void excluirPessoa(final Long id) {
+        log.info("[Pessoa-Api][excluirPessoa] Iniciando a exclusão da pessoa com ID: {}", id);
+
         Optional.ofNullable(id)
                 .ifPresent(pessoaGateway::deletar);
-        log.info("[Pessoa-Api][excluirPessoa] Pessoa excluida com sucesso! ID: {}", id);
+        log.info("[Pessoa-Api][excluirPessoa] Pessoa excluída com sucesso! ID: {}", id);
     }
 
     private Pessoa buildPessoaAtualizada(final Pessoa novaPessoa, final Pessoa pessoaEncontrada) {
@@ -105,5 +125,4 @@ public class PessoaServiceImpl implements PessoaService {
                 .departamento(novaPessoa.getDepartamento() != null ? novaPessoa.getDepartamento() : pessoaEncontrada.getDepartamento())
                 .build();
     }
-
 }
