@@ -21,7 +21,7 @@ public class Pessoa {
     private String nome;
     private String departamento;
 
-    public Long calcularTotalHorasGastas(List<Tarefa> tarefas) {
+    public Long calcularTotalHorasGastas(Collection<Tarefa> tarefas) {
         if (tarefas == null || tarefas.isEmpty()) {
             return 0L;
         }

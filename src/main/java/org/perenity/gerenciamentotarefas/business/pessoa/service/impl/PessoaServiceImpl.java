@@ -65,10 +65,7 @@ public class PessoaServiceImpl implements PessoaService {
 
             final Collection<Tarefa> tarefas = tarefaGateway.listarTarefasPorPessoa(pessoa.getId());
 
-            final Long totalHoras = tarefas.stream()
-                    .filter(t -> Boolean.TRUE.equals(t.getFinalizado()) && t.getDuracaoHoras() != null)
-                    .mapToLong(Tarefa::getDuracaoHoras)
-                    .sum();
+            final Long totalHoras = pessoa.calcularTotalHorasGastas(tarefas);
 
             return ResponseListarPessoasTotalHoraTarefa.builder()
                     .pessoaId(pessoa.getId())
