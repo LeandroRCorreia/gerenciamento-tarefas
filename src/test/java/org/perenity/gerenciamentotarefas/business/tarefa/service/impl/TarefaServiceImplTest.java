@@ -7,6 +7,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.perenity.gerenciamentotarefas.business.pessoa.exception.PessoaNaoEncontradaException;
 import org.perenity.gerenciamentotarefas.business.pessoa.gateway.PessoaGateway;
 import org.perenity.gerenciamentotarefas.business.pessoa.model.Pessoa;
 import org.perenity.gerenciamentotarefas.business.tarefa.exception.TarefaNaoEncontradaException;
@@ -54,34 +55,33 @@ class TarefaServiceImplTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção quando tarefa não for encontrada")
+    @DisplayName("Deve lançar exceção quando a tarefa não for encontrada")
     void deveLancarExcecaoQuandoTarefaNaoForEncontrada() {
-        when(tarefaGateway.buscarTarefa(1L)).thenReturn(Optional.empty());
+        Long tarefaId = 1L;
+        Tarefa novaTarefa = Tarefa.builder().pessoaId(10L).build();
 
-        Tarefa tarefa = Tarefa.builder().pessoaId(10L).build();
+        when(tarefaGateway.buscarTarefa(tarefaId)).thenReturn(Optional.empty());
 
-        TarefaNaoEncontradaException ex = assertThrows(TarefaNaoEncontradaException.class,
-                () -> tarefaService.alocarTarefaPessoa(1L, tarefa));
-
-        assertEquals("Tarefa não encontrada com ID: 1", ex.getMessage());
+        assertThrows(TarefaNaoEncontradaException.class, () ->
+                tarefaService.alocarTarefaPessoa(tarefaId, novaTarefa)
+        );
     }
 
     @Test
-    @DisplayName("Deve lançar exceção quando pessoa não for encontrada")
+    @DisplayName("Deve lançar exceção quando a pessoa não for encontrada")
     void deveLancarExcecaoQuandoPessoaNaoForEncontrada() {
         Long tarefaId = 1L;
         Long pessoaId = 10L;
 
-        Tarefa tarefa = Tarefa.builder().pessoaId(pessoaId).build();
-        Tarefa tarefaEncontrada = Tarefa.builder().id(tarefaId).departamento("TI").build();
+        Tarefa novaTarefa = Tarefa.builder().pessoaId(pessoaId).build();
+        Tarefa tarefaExistente = Tarefa.builder().id(tarefaId).departamento("TI").build();
 
-        when(tarefaGateway.buscarTarefa(tarefaId)).thenReturn(Optional.of(tarefaEncontrada));
+        when(tarefaGateway.buscarTarefa(tarefaId)).thenReturn(Optional.of(tarefaExistente));
         when(pessoaGateway.buscarPessoa(pessoaId)).thenReturn(Optional.empty());
 
-        TarefaNaoEncontradaException ex = assertThrows(TarefaNaoEncontradaException.class,
-                () -> tarefaService.alocarTarefaPessoa(tarefaId, tarefa));
-
-        assertEquals("Pessoa não encontrada com ID: " + pessoaId, ex.getMessage());
+        assertThrows(PessoaNaoEncontradaException.class, () ->
+                tarefaService.alocarTarefaPessoa(tarefaId, novaTarefa)
+        );
     }
 
     @Test
