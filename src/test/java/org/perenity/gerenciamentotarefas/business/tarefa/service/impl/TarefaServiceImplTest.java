@@ -9,9 +9,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.perenity.gerenciamentotarefas.business.pessoa.gateway.PessoaGateway;
 import org.perenity.gerenciamentotarefas.business.pessoa.model.Pessoa;
+import org.perenity.gerenciamentotarefas.business.tarefa.exception.TarefaNaoEncontradaException;
 import org.perenity.gerenciamentotarefas.business.tarefa.gateway.TarefaGateway;
 import org.perenity.gerenciamentotarefas.business.tarefa.model.Tarefa;
-import org.perenity.gerenciamentotarefas.exception.NotFoundException;
 
 import java.util.Optional;
 
@@ -60,7 +60,7 @@ class TarefaServiceImplTest {
 
         Tarefa tarefa = Tarefa.builder().pessoaId(10L).build();
 
-        NotFoundException ex = assertThrows(NotFoundException.class,
+        TarefaNaoEncontradaException ex = assertThrows(TarefaNaoEncontradaException.class,
                 () -> tarefaService.alocarTarefaPessoa(1L, tarefa));
 
         assertEquals("Tarefa não encontrada com ID: 1", ex.getMessage());
@@ -78,7 +78,7 @@ class TarefaServiceImplTest {
         when(tarefaGateway.buscarTarefa(tarefaId)).thenReturn(Optional.of(tarefaEncontrada));
         when(pessoaGateway.buscarPessoa(pessoaId)).thenReturn(Optional.empty());
 
-        NotFoundException ex = assertThrows(NotFoundException.class,
+        TarefaNaoEncontradaException ex = assertThrows(TarefaNaoEncontradaException.class,
                 () -> tarefaService.alocarTarefaPessoa(tarefaId, tarefa));
 
         assertEquals("Pessoa não encontrada com ID: " + pessoaId, ex.getMessage());

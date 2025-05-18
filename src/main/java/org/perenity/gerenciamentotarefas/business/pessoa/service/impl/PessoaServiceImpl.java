@@ -2,12 +2,13 @@ package org.perenity.gerenciamentotarefas.business.pessoa.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.perenity.gerenciamentotarefas.business.exception.DomainNotFoundException;
+import org.perenity.gerenciamentotarefas.business.pessoa.exception.PessoaNaoEncontradaException;
 import org.perenity.gerenciamentotarefas.business.pessoa.gateway.PessoaGateway;
 import org.perenity.gerenciamentotarefas.business.pessoa.model.Pessoa;
 import org.perenity.gerenciamentotarefas.business.pessoa.service.PessoaService;
 import org.perenity.gerenciamentotarefas.business.tarefa.gateway.TarefaGateway;
 import org.perenity.gerenciamentotarefas.business.tarefa.model.Tarefa;
-import org.perenity.gerenciamentotarefas.exception.NotFoundException;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.response.ResponseListarPessoasNomePeriodo;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.response.ResponseListarPessoasTotalHoraTarefa;
 import org.springframework.stereotype.Service;
@@ -100,7 +101,7 @@ public class PessoaServiceImpl implements PessoaService {
                 .ifPresent(p -> {
                     final Pessoa pessoaEncontrada = pessoaGateway
                             .buscarPessoa(id)
-                            .orElseThrow(() -> new NotFoundException("Pessoa não encontrada"));
+                            .orElseThrow(() -> new PessoaNaoEncontradaException(id));
                     final Pessoa buildPessoaAtualizada = buildPessoaAtualizada(pessoa, pessoaEncontrada);
                     pessoaGateway.atualizar(id, buildPessoaAtualizada);
                     log.info("[Pessoa-Api][atualizarPessoa] Pessoa atualizada com sucesso! ID: {}", id);

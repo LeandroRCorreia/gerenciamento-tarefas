@@ -6,11 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.perenity.gerenciamentotarefas.business.pessoa.exception.PessoaNaoEncontradaException;
 import org.perenity.gerenciamentotarefas.business.pessoa.gateway.PessoaGateway;
 import org.perenity.gerenciamentotarefas.business.pessoa.model.Pessoa;
 import org.perenity.gerenciamentotarefas.business.tarefa.gateway.TarefaGateway;
 import org.perenity.gerenciamentotarefas.business.tarefa.model.Tarefa;
-import org.perenity.gerenciamentotarefas.exception.NotFoundException;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.response.ResponseListarPessoasNomePeriodo;
 import org.perenity.gerenciamentotarefas.presentation.pessoa.dto.response.ResponseListarPessoasTotalHoraTarefa;
 
@@ -127,7 +127,7 @@ class PessoaServiceImplTest {
         try {
             pessoaServiceImpl.atualizarPessoa(idInvalido, pessoaAtualizada);
         } catch (Exception e) {
-            assertInstanceOf(NotFoundException.class, e);
+            assertInstanceOf(PessoaNaoEncontradaException.class, e);
         }
 
         verify(pessoaGateway, times(1)).buscarPessoa(idInvalido);

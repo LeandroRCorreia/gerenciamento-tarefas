@@ -2,12 +2,13 @@ package org.perenity.gerenciamentotarefas.business.tarefa.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.perenity.gerenciamentotarefas.business.pessoa.exception.PessoaNaoEncontradaException;
 import org.perenity.gerenciamentotarefas.business.pessoa.gateway.PessoaGateway;
 import org.perenity.gerenciamentotarefas.business.pessoa.model.Pessoa;
+import org.perenity.gerenciamentotarefas.business.tarefa.exception.TarefaNaoEncontradaException;
 import org.perenity.gerenciamentotarefas.business.tarefa.gateway.TarefaGateway;
 import org.perenity.gerenciamentotarefas.business.tarefa.model.Tarefa;
 import org.perenity.gerenciamentotarefas.business.tarefa.service.TarefaService;
-import org.perenity.gerenciamentotarefas.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -70,21 +71,21 @@ public class TarefaServiceImpl implements TarefaService {
         log.info("[Tarefa-Api][finalizarTarefa] Tarefa com ID {} finalizada com sucesso. Duração registrada: {} horas", id, tarefa.getDuracaoHoras());
     }
 
-    private Tarefa buscarTarefaOuFalhar(Long tarefaId) {
+    private Tarefa buscarTarefaOuFalhar(final Long tarefaId) {
         return tarefaGateway
                 .buscarTarefa(tarefaId)
                 .orElseThrow(() -> {
                     log.warn("[Tarefa-Api][buscarTarefaOuFalhar] Tarefa com ID {} não encontrada", tarefaId);
-                    return new NotFoundException("Tarefa não encontrada com ID: " + tarefaId);
+                    return new TarefaNaoEncontradaException(tarefaId);
                 });
     }
 
-    private Pessoa buscarPessoaOuFalhar(Long pessoaId) {
+    private Pessoa buscarPessoaOuFalhar(final Long pessoaId) {
         return pessoaGateway
                 .buscarPessoa(pessoaId)
                 .orElseThrow(() -> {
                     log.warn("[Tarefa-Api][buscarPessoaOuFalhar] Pessoa com ID {} não encontrada", pessoaId);
-                    return new NotFoundException("Pessoa não encontrada com ID: " + pessoaId);
+                    return new PessoaNaoEncontradaException(pessoaId);
                 });
     }
 
